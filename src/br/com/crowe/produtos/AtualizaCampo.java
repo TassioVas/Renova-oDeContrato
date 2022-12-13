@@ -38,6 +38,8 @@ public class AtualizaCampo {
 			boolean delete = nativeSql.executeUpdate("DELETE FROM AD_VLRADICIONAL WHERE NUMCONTRATO = " + numContrato + " AND SEQUENCIAL IN (1, 2)");
 			System.out.println("sysout delete...  ");
 	
+		} else if (nroDecimoTerceiro.equals(new BigDecimal(1))) {
+			boolean delete = nativeSql.executeUpdate("DELETE FROM AD_VLRADICIONAL WHERE NUMCONTRATO = " + numContrato + " AND SEQUENCIAL = 1");
 		}
 		
 		System.out.println("dPOIS DE ATUALIZAR");

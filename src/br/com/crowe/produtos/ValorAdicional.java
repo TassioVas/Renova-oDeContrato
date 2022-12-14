@@ -50,50 +50,47 @@ public class ValorAdicional {
 			System.out.println("Entrou no while para vlr adicional");
 			System.out.println("vlr ajustado " + vlrAdicional);
 
-			ResultSet query1 = nativeSql.executeQuery(
+			ResultSet rs = nativeSql.executeQuery(
 					"SELECT NROPARCDECTER, VLRREAJUSTADO FROM AD_RENOVCONT WHERE NUMCONTRATO = " + numContrato);
 
-			while (query1.next()) {
+			while (rs.next()) {
 
-				nroDecimoTerceiro = query.getBigDecimal("NROPARCDECTER");
+				nroDecimoTerceiro = rs.getBigDecimal("NROPARCDECTER");
 
 				if (nroDecimoTerceiro.equals(new BigDecimal(2))) {
+					vlrAdicional = Calculator.calcular(vlrAdicional);
+				}
 
-					vlrAdicional2 = Calculator.calcular(vlrAdicional);
+				System.out.println("Valor adicional antes de converter :" + vlrAdicional2);
 
-				} else {
+				// System.out.println("Vlr calculado "+ vlr);
+				System.out.println("numContrato " + numContrato);
+				System.out.println("dtvenc :" + agora);
+				System.out.println("observação :" + obs);
+				System.out.println("codprod :" + codProd);
 
-					System.out.println("Valor adicional antes de converter :" + vlrAdicional2);
+				//DecimalFormat df = new DecimalFormat("##.####");
+				//System.out.println("Formatado  : " + df.format(vlrAdicional2));
+				try {
 
-					// System.out.println("Vlr calculado "+ vlr);
-					System.out.println("numContrato " + numContrato);
-					System.out.println("dtvenc :" + agora);
-					System.out.println("observação :" + obs);
-					System.out.println("codprod :" + codProd);
+					System.out.println("inserindo vlr adicional");
 
-					DecimalFormat df = new DecimalFormat("##.####");
-					System.out.println("Formatado  : " + df.format(vlrAdicional2));
-					try {
+					EntityFacade dwfFacade = EntityFacadeFactory.getDWFFacade();
+					DynamicVO dynamicVO1 = (DynamicVO) dwfFacade.getDefaultValueObjectInstance("AD_VLRADICIONAL");
 
-						System.out.println("inserindo vlr adicional");
+					dynamicVO1.setProperty("VLRADICIONAL", vlrAdicional);
+					dynamicVO1.setProperty("NUMCONTRATO", numContrato);
+					dynamicVO1.setProperty("DTVENC", agora);
+					dynamicVO1.setProperty("OBSERVACAO", obs);
+					dynamicVO1.setProperty("CODPROD", codProd);
 
-						EntityFacade dwfFacade = EntityFacadeFactory.getDWFFacade();
-						DynamicVO dynamicVO1 = (DynamicVO) dwfFacade.getDefaultValueObjectInstance("AD_VLRADICIONAL");
+					PersistentLocalEntity createEntity = dwfFacade.createEntity("AD_VLRADICIONAL",
+							(EntityVO) dynamicVO1);
+					DynamicVO save = (DynamicVO) createEntity.getValueObject();
 
-						dynamicVO1.setProperty("VLRADICIONAL", vlrAdicional2);
-						dynamicVO1.setProperty("NUMCONTRATO", numContrato);
-						dynamicVO1.setProperty("DTVENC", agora);
-						dynamicVO1.setProperty("OBSERVACAO", obs);
-						dynamicVO1.setProperty("CODPROD", codProd);
-
-						PersistentLocalEntity createEntity = dwfFacade.createEntity("AD_VLRADICIONAL",
-								(EntityVO) dynamicVO1);
-						DynamicVO save = (DynamicVO) createEntity.getValueObject();
-
-					} catch (Exception e) {
-						String msg = "Erro na inclusao dos Itens " + e.getMessage();
-						System.out.println(msg);
-					}
+				} catch (Exception e) {
+					String msg = "Erro na inclusao dos Itens " + e.getMessage();
+					System.out.println(msg);
 				}
 			}
 		}

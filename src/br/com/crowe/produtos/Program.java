@@ -29,17 +29,8 @@ public class Program implements AcaoRotinaJava{
 		NativeSql nativeSql = new NativeSql(JDBC);
 		SessionHandle hnd = JapeSession.open();
 		
-		BigDecimal codusu = contexto.getUsuarioLogado();
-		
 		
 		for (int i = 0; i < (contexto.getLinhas()).length; i++) {
-			
-			if ((contexto.getLinhas()).length == 0) {
-				contexto.mostraErro("Selecione um registro antes.");
-			} else if ((contexto.getLinhas()).length > 1) {
-				contexto.mostraErro("Selecione apenas um registro.");
-			}
-			
 			Registro linha = contexto.getLinhas()[i];
 			numContrato = (BigDecimal) linha.getCampo("NUMCONTRATO");
 			
@@ -60,6 +51,8 @@ public class Program implements AcaoRotinaJava{
 
 			InserirProduto inserirProduto = new InserirProduto();
 			inserirProduto.produto(numContrato);
+			
+			BigDecimal codusu = contexto.getUsuarioLogado();
 			
 			InserirOcorrencia ocorrencia = new InserirOcorrencia();
 			ocorrencia.ocorrencia(numContrato, codusu);
